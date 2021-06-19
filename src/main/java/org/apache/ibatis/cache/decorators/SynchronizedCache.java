@@ -18,6 +18,8 @@ package org.apache.ibatis.cache.decorators;
 import org.apache.ibatis.cache.Cache;
 
 /**
+ * 3.2.6以后这个类已经没用了，考虑到Hazelcast, EhCache已经有锁机制了，所以这个锁就画蛇添足了。
+ * bug见https://github.com/mybatis/mybatis-3/issues/159
  * @author Clinton Begin
  */
 public class SynchronizedCache implements Cache {

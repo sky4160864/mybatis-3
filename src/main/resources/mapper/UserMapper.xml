@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cap.dao.UserMapper">
+  <resultMap id="BaseResultMap" type="com.cap.entity.User">
+    <!--@mbg.generated-->
+    <!--@Table `user`-->
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="age" jdbcType="INTEGER" property="age" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, user_name, age
+  </sql>
+  <insert id="insert" parameterType="com.cap.entity.User">
+    <!--@mbg.generated-->
+    insert into `user` (id, user_name, age
+      )
+    values (#{id,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}
+      )
+  </insert>
+</mapper>

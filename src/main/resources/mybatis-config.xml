@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--<properties url="file:///E:/java_source/MybatisWithCRUD01/src/main/resources/jdbcConfig.properties"></properties>-->
+    <!--<properties resource="config.properties"></properties>-->
+    <!--<properties resource="config.properties">
+        <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://192.168.137.100:3306/yczuoxin?serverTimezone=Asia/Shanghai&amp;useUnicode=true&amp;characterEncoding=utf8&amp;useSSL=true"/>
+        <property name="username" value="root"/>
+        <property name="password" value="root"/>
+    </properties>-->
+    <settings>
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <!-- <setting name="aggressiveLazyLoading" value="false"/> -->
+
+       <!--日志配置-->
+        <!--不打印日志-->
+        <!--<setting name="logImpl" value="NO_LOGGING"/>-->
+        <!--使用LOG4J-->
+        <!--<setting name="logImpl" value="LOG4J"/>-->
+    </settings>
+
+    <typeHandlers>
+        <!--<package name="org.mybatis.example"/>-->
+        <typeHandler jdbcType="VARCHAR" javaType="string" handler="com.cap.handle.MyStringHandler"/>
+    </typeHandlers>
+
+    <!--<plugins>
+        <plugin interceptor="com.cap.plugin.ExamplePlugin">
+            <property name="someProperty" value="100"/>
+        </plugin>
+    </plugins>-->
+
+    <!-- 定义数据库的信息，默认使用development数据库构建环境 -->
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC" />
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.cj.jdbc.Driver" />
+                <property name="url" value="jdbc:mysql://localhost:3306/mybatis?useUnicode=true&amp;characterEncoding=UTF8&amp;serverTimezone=Asia/Shanghai&amp;rewriteBatchedStatements=true&amp;autoReconnect=true" />
+                <property name="username" value="root" />
+                <property name="password" value="1234" />
+            </dataSource>
+        </environment>
+    </environments>
+    <!-- 定义映射器 -->
+    <mappers>
+        <mapper resource="mapper/RoleDao.xml"/>
+    </mappers>
+</configuration>

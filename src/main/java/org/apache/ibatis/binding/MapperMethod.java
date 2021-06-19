@@ -180,12 +180,15 @@ public class MapperMethod {
   private <E> Object convertToArray(List<E> list) {
     Class<?> arrayComponentType = method.getReturnType().getComponentType();
     Object array = Array.newInstance(arrayComponentType, list.size());
+
     if (arrayComponentType.isPrimitive()) {
       for (int i = 0; i < list.size(); i++) {
+        // 基本类型 Array.set效率高?
         Array.set(array, i, list.get(i));
       }
       return array;
     } else {
+      // System.arraycopy 效率低?
       return list.toArray((E[]) array);
     }
   }
@@ -272,6 +275,9 @@ public class MapperMethod {
     }
   }
 
+  /**
+   * 方法签名，静态内部类
+   */
   public static class MethodSignature {
 
     private final boolean returnsMany;

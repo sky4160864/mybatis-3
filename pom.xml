@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis-parent</artifactId>
-    <version>33</version>
+    <version>32</version>
     <relativePath />
   </parent>
 
@@ -143,6 +143,12 @@
 
   <dependencies>
     <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.12</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>ognl</groupId>
       <artifactId>ognl</artifactId>
       <version>3.2.21</version>
@@ -198,7 +204,7 @@
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
       <version>5.7.2</version>
-      <scope>test</scope>
+      <!--<scope>test</scope>-->
     </dependency>
     <dependency>
       <groupId>org.hsqldb</groupId>
@@ -265,7 +271,7 @@
       <groupId>org.testcontainers</groupId>
       <artifactId>junit-jupiter</artifactId>
       <version>1.15.3</version>
-      <scope>test</scope>
+      <!--<scope>test</scope>-->
     </dependency>
     <dependency>
       <groupId>org.testcontainers</groupId>

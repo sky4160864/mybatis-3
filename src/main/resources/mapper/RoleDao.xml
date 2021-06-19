@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cap.dao.RoleDao">
+
+    <resultMap id="roleMap" type="com.cap.entity.Role">
+        <id column="id" property="id" javaType="long" jdbcType="BIGINT"/>
+        <result column="role_name" property="roleName" javaType="string" jdbcType="VARCHAR"/>
+        <result column="note" property="note" typeHandler="com.cap.handle.MyStringHandler"/>
+        <collection property="users" ofType="com.cap.entity.User">
+            <result column="uid" property="id"/>
+            <result column="user_name" property="userName"/>
+            <result column="age" property="age"/>
+        </collection>
+    </resultMap>
+    <!-- 没有启用auto-mapping-behavior自动映射 role_name无法映射到roleName
+    <select id="getRole" parameterType="long" resultType="com.cap.entity.Role">
+    -->
+    <select id="getRole" parameterType="long" resultMap="roleMap">
+        select id,
+               role_name,
+               note
+        from role
+        where id = #{id}
+    </select>
+
+    <select id="getRoleWithUsers" parameterType="long" resultMap="roleMap">
+        select a.id,
+               a.role_name,
+               a.note,
+               u.id uid,
+               u.user_name,
+               u.age
+        from role a
+        inner join role_user ru on a.id = ru.role_id
+        inner join user u on ru.user_id =u.id
+        where a.id = #{id}
+    </select>
+
+    <!--测试sql语句-->
+    <sql id="include01">
+        from ${tableName}
+    </sql>
+    <select id="getRoleWithUsers2" parameterType="long" resultMap="roleMap">
+        select a.id,
+               a.role_name,
+               a.note,
+               u.id uid,
+               concat(u.user_name,u.age) user_name,
+               u.age
+        <include refid="include01">
+          <property name="tableName" value="role"/>
+        </include> a
+        inner join role_user ru on a.id = ru.role_id
+        inner join user u on ru.user_id =u.id
+        where a.id = #{id}
+    </select>
+
+    <select id="findRole" parameterType="long" resultMap="roleMap">
+        select id,
+               role_name,
+               note
+        from role
+        where role_name like
+              CONCAT('%', #{roleName,javaType=string,jdbcType=VARCHAR,typeHandler=com.cap.handle.MyStringHandler}, '%')
+    </select>
+    <insert id="insertRole" parameterType="com.cap.entity.Role">
+        insert into role(role_name, note) value (#{roleName}, #{note})
+    </insert>
+    <delete id="deleteRole" parameterType="long">
+        delete
+        from role
+        where id = #{id}
+    </delete>
+</mapper>

@@ -87,13 +87,16 @@ public class BlockingCache implements Cache {
   }
 
   private void acquireLock(Object key) {
+    // fix #1261 Replace ReentrantLock with CountDownLatch to avoid OutOfMemoryError
     CountDownLatch newLatch = new CountDownLatch(1);
     while (true) {
       CountDownLatch latch = locks.putIfAbsent(key, newLatch);
+      // 第一个进来latch必为空,后进来的不为空
       if (latch == null) {
         break;
       }
       try {
+        // 后进来的等待第一个线程释放latch
         if (timeout > 0) {
           boolean acquired = latch.await(timeout, TimeUnit.MILLISECONDS);
           if (!acquired) {

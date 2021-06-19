@@ -59,7 +59,42 @@ public class XMLIncludeTransformer {
    *          Current context for static variables with values
    */
   private void applyIncludes(Node source, final Properties variablesContext, boolean included) {
+    /*
+     * 例:
+     * <sql id="sometable">
+     *   ${prefix}Table
+     * </sql>
+     *
+     * <sql id="someinclude">
+     *   from
+     *     <include refid="${include_target}"/>
+     * </sql>
+     *
+     * <select id="select" resultType="map">
+     *   select
+     *     field1, field2, field3
+     *   <include refid="someinclude">
+     *     <property name="prefix" value="Some"/>
+     *     <property name="include_target" value="sometable"/>
+     *   </include>
+     * </select>
+     *
+     * 调用过程(递归解析):
+     * 1. 第一次调用applyIncludes方法,解析<select id="select" resultType="map">代码片段
+     *    判断有include,获取refid,即<sql id="someinclude">代码片段,调用applyIncludes解析
+     * 2. 第二次调用applyIncludes方法,解析<sql id="someinclude">代码片段,又有include,
+     *    获取<sql id="sometable">代码片段,调用applyIncludes解析
+     * 3. 第三次调用applyIncludes方法,解析<sql id="sometable">代码片段,没有include,设置动态参数
+     * 4. 回到 第二次调用applyIncludes方法 设置动态参数
+     * 5. 回到 第一次调用applyIncludes方法 设置动态参数
+     * 6. 结束
+     *
+     * 总结:
+     * 1. 解析成 select field1, field2, field3 from SomeTable
+     * 2. 包含N个include,则需要调整N+1次applyIncludes()
+     */
     if ("include".equals(source.getNodeName())) {
+      /* 获取引用<sql>节点,注意是深度拷贝 C.H 2021-06-18 */
       Node toInclude = findSqlFragment(getStringAttribute(source, "refid"), variablesContext);
       Properties toIncludeContext = getVariablesContext(source, variablesContext);
       applyIncludes(toInclude, toIncludeContext, true);
@@ -96,6 +131,7 @@ public class XMLIncludeTransformer {
     refid = builderAssistant.applyCurrentNamespace(refid, true);
     try {
       XNode nodeToInclude = configuration.getSqlFragments().get(refid);
+      /* 深度克隆,因为需要解析成可执行sql,会修改对象 C.H 2021-06-18 */
       return nodeToInclude.getNode().cloneNode(true);
     } catch (IllegalArgumentException e) {
       throw new IncompleteElementException("Could not find SQL statement to include with refid '" + refid + "'", e);

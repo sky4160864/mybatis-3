@@ -69,6 +69,9 @@ public class XMLStatementBuilder extends BaseBuilder {
     boolean resultOrdered = context.getBooleanAttribute("resultOrdered", false);
 
     // Include Fragments before parsing
+    // <include>节点和<sql>节点可以配合使用、多层嵌套，实现更加复杂的sql片段的重用，
+    // 解析过程就会递归更多层，流程变得更加复杂
+    // 实际开发中不会超过3层吧
     XMLIncludeTransformer includeParser = new XMLIncludeTransformer(configuration, builderAssistant);
     includeParser.applyIncludes(context.getNode());
 
