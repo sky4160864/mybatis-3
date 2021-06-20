@@ -14,9 +14,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class Role {
-
     private long id;
     private String roleName;
     private String note;
-    private List<User> users;
 }
